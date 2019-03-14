@@ -40,14 +40,10 @@ void optimizerSetup(g2o::SparseOptimizer& optimizer){
   optimizer.setVerbose(false);
 
   // variable-size block solver
-  g2o::BlockSolverX::LinearSolverType * linearSolver
-      = new g2o::LinearSolverCholmod<g2o ::BlockSolverX::PoseMatrixType>();
+  std::unique_ptr<g2o::BlockSolverX::LinearSolverType> linearSolver = g2o::make_unique<g2o::LinearSolverCholmod<g2o::BlockSolverX::PoseMatrixType>>();
+  std::unique_ptr<g2o::BlockSolverX> solver_ptr( new g2o::BlockSolverX( std::move(linearSolver)) );
 
-
-  g2o::BlockSolverX * solver_ptr
-      = new g2o::BlockSolverX(linearSolver);
-
-  g2o::OptimizationAlgorithmGaussNewton* solver = new g2o::OptimizationAlgorithmGaussNewton(solver_ptr);
+  g2o::OptimizationAlgorithmGaussNewton* solver = new g2o::OptimizationAlgorithmGaussNewton(std::move(solver_ptr));
   optimizer.setAlgorithm(solver);
   //optimizer.setSolver(solver_ptr);
 

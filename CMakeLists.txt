@@ -3,7 +3,7 @@ cmake_policy(SET CMP0003 NEW)
 #########################################################
 ### USER CONFIG #########################################
 #########################################################
-set(USE_SIFT_GPU  1 CACHE BOOL "build with support for siftgpu") 
+set(USE_SIFT_GPU  0 CACHE BOOL "build with support for siftgpu") 
 if (${USE_SIFT_GPU})
   message(STATUS "SiftGPU library will be used")
 else (${USE_SIFT_GPU})
@@ -98,6 +98,11 @@ message("G2o-libraries " ${G2O_LIBRARIES})
 find_package(X11)
 find_package(PkgConfig)
 pkg_check_modules(GLEW REQUIRED glew)
+
+# DevIL (!!!!this is not installed on ubuntu18.04 as default)
+# link: https://github.com/DentonW/DevIL
+find_package(DevIL REQUIRED)
+include_directories(SYSTEM ${IL_INCLUDE_DIR})
 
 # Qt ########################
 find_package(Qt5 COMPONENTS Widgets OpenGL Concurrent)
@@ -263,7 +268,7 @@ IF (${USE_GICP})
  	SET(LIBS_LINK ${LIBS_LINK} gicp ANN gsl gslcblas)
 ENDIF (${USE_GICP})
 #link libraries
-target_link_libraries(rgbdslam ${LIBS_LINK} ${X11_LIBRARIES} ${GLEW_LIBRARIES} IL ${catkin_LIBRARIES})
+target_link_libraries(rgbdslam ${LIBS_LINK} ${X11_LIBRARIES} ${GLEW_LIBRARIES} ${IL_LIBRARIES} ${catkin_LIBRARIES})
 
 IF (${USE_GICP})
   set(ROS_COMPILE_FLAGS ${ROS_COMPILE_FLAGS} -fpermissive)
