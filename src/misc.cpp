@@ -801,7 +801,7 @@ float getMinDepthInNeighborhood(const cv::Mat& depth, cv::Point2f center, float 
 #define SQRT_2 1.41421
 #define LOG_SQRT_2_PI = 0.9189385332
 
-inline int round(float d)
+inline int round2(float d)
 {
   return static_cast<int>(floor(d + 0.5));
 }
@@ -877,8 +877,8 @@ void observationLikelihood(const Eigen::Matrix4f& proposed_transformation,//new 
       point_type& p = new_pc_transformed.at(new_rx, new_ry);
       if(p.z != p.z) continue; //NaN
       if(p.z < 0) continue; // Behind the camera
-      int old_rx_center = round((p.x / p.z)* fx + cx);
-      int old_ry_center = round((p.y / p.z)* fy + cy);
+      int old_rx_center = round2((p.x / p.z)* fx + cx);
+      int old_ry_center = round2((p.y / p.z)* fy + cy);
       //ROS_INFO_COND(new_ry % 32 == 0 && new_rx % 32 == 0, "Projected point from [%d, %d] to [%d, %d]", new_rx, new_ry, old_rx_center, old_ry_center);
       if(old_rx_center >= (int)old_pc->width || old_rx_center < 0 ||
          old_ry_center >= (int)old_pc->height|| old_ry_center < 0 )
@@ -1012,8 +1012,8 @@ double rejectionSignificance(const Eigen::Matrix4f& proposed_transformation,//ne
       //TODO: Cache this?
       point_type& p = new_pc_transformed.at(new_rx, new_ry);
       if(p.z != p.z) continue; //NaN
-      int old_rx_center = round((p.x / p.z)* fx + cx);
-      int old_ry_center = round((p.y / p.z)* fy + cy);
+      int old_rx_center = round2((p.x / p.z)* fx + cx);
+      int old_ry_center = round2((p.y / p.z)* fy + cy);
       if(old_rx_center >= (int)old_pc->width || old_rx_center < 0 ||
          old_ry_center >= (int)old_pc->height|| old_ry_center < 0 )
       {
